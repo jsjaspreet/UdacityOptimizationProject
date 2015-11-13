@@ -29,7 +29,7 @@ gulp.task('img-min', function(){
 gulp.task('html-compress', function() {
     gulp.src('*.html')
     .pipe(minifyHTML())
-    .pipe(gulp.dest('dist/html'));
+    .pipe(gulp.dest('dist'));
 });
 
 gulp.task('css-minify', function(){
