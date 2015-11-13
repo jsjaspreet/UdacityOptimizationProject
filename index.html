@@ -3,15 +3,21 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content=" FILL ME IN ">
-    <meta name="author" content=" FILL ME IN ">
+    <meta name="description" content="Personal Website - Optimization Project">
+    <meta name="author" content="Jaspreet Singh">
     <title>Cameron Pittman: Portfolio</title>
-
-    <!-- Hmm, what is the impact of web fonts on speed? Measure it... -->
-    <link href="//fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
-
-    <link href="css/style.css" rel="stylesheet">
-    <link href="css/print.css" rel="stylesheet">
+    <style>
+      html {
+  font-size: 100%;
+  overflow-y: scroll;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: none;
+}
+body { margin: 0; font-size: 14px; line-height: 1.61; font-weight: 400; }
+body, button, input, select, textarea { font-family: 'Open Sans', sans-serif; color: #333; }
+    </style>
+    <link href="dist/css/print.css" rel="stylesheet" media="print">
 
     <script>
       (function(w,g){w['GoogleAnalyticsObject']=g;
@@ -21,13 +27,13 @@
       ga('create', 'UA-XXXX-Y');
       ga('send', 'pageview');
     </script>
-    <script src="http://www.google-analytics.com/analytics.js"></script>
+    <script async src="http://www.google-analytics.com/analytics.js"></script>
     <script async src="js/perfmatters.js"></script>
   </head>
 
   <body>
     <header>
-      <a href="/"><img src="img/profilepic.jpg"></a>
+      <a href="/"><img src="dist/img/profilepic.jpg"></a>
       <p>Cameron Pittman<br><span>Course Developer</span></p>
     </header>
 
@@ -57,7 +63,7 @@
           </li>
 
           <li>
-            <img style="width: 100px;" src="views/images/pizzeria.jpg">
+            <img style="width: 100px;" src="dist/img/views/images/pizzeria.jpg">
             <a href="views/pizza.html">Cam's Pizzeria</a>
             <p>Who wants a performant pizza?</p>
           </li>
@@ -67,5 +73,19 @@
     <footer>
       <p>&copy; Web Performance 2014 <span id="crp-stats"></span></p>
     </footer>
+      <script>
+        var cb = function() {
+          var l = document.createElement('link'); l.rel = 'stylesheet';
+          l.href = 'dist/css/style.css';
+          var font = document.createElement('link');font.rel = 'stylesheet';
+          font.href='//fonts.googleapis.com/css?family=Open+Sans:400,700';
+          var h = document.getElementsByTagName('head')[0]; h.parentNode.insertBefore(l, h);
+          h.parentNode.insertBefore(font, h);
+        };
+        var raf = requestAnimationFrame || mozRequestAnimationFrame ||
+                webkitRequestAnimationFrame || msRequestAnimationFrame;
+        if (raf) raf(cb);
+        else window.addEventListener('load', cb);
+      </script>
   </body>
 </html>
