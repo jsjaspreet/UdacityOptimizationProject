@@ -450,9 +450,13 @@ var resizePizzas = function(size) {
 
   // Iterates through pizza elements on the page and changes their widths
   function changePizzaSizes(size) {
+    // The problem with the long time in updating Pizza sizes
+    // was in the use of offsetWidth which was re-triggering layout.
+    // Since the pizzas are in uniform containers, we can recalculate width for a single container.
+    // And then batch our style updates in bulk.
+    var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[0], size);
+    var newwidth = (document.querySelectorAll(".randomPizzaContainer")[0].offsetWidth + dx) + 'px';
     for (var i = 0; i < document.querySelectorAll(".randomPizzaContainer").length; i++) {
-      var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[i], size);
-      var newwidth = (document.querySelectorAll(".randomPizzaContainer")[i].offsetWidth + dx) + 'px';
       document.querySelectorAll(".randomPizzaContainer")[i].style.width = newwidth;
     }
   }
@@ -503,8 +507,11 @@ function updatePositions() {
   window.performance.mark("mark_start_frame");
 
   var items = document.querySelectorAll('.mover');
+  // scrollTop is triggering FSL, this is a constant value so don't recalculate it
+  // Instead just assign static value to a static variable and incorporate it within loop
+  var sinOffset = (document.body.scrollTop / 1250);
   for (var i = 0; i < items.length; i++) {
-    var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
+    var phase = Math.sin( sinOffset + (i % 5));
     items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
   }
 
