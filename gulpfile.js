@@ -8,7 +8,8 @@ var gulp = require('gulp'),
     clean = require('gulp-clean'),
     imagemin = require('imagemin'),
     imageminJPG = require('imagemin-jpegtran'),
-    pngquant = require('imagemin-pngquant');
+    pngquant = require('imagemin-pngquant'),
+    imageResize = require('gulp-image-resize');
 
 
 // ///////////////////////////////////////////////
@@ -20,10 +21,19 @@ gulp.task('img-min', function(){
     .dest('dist/img')
     .use(imageminJPG())
     .run();
+});
 
-//    gulp.src(['img/*.jpg', 'views/images/*.jpg'])
-  //  .pipe(imagemin({use: [imageminJPG()]}))
-    //.pipe(gulp.dest('dist/img'));
+gulp.task('resize-pizzeria', function(){
+    gulp.src('dist/img/pizzeria.jpg')
+        .pipe(imageResize({
+            width : 100
+        }))
+        .pipe(gulp.dest('dist/img/'));
+});
+
+gulp.task('copy-js', function(){
+   gulp.src("js/*")
+       .pipe(gulp.dest('dist/js'));
 });
 
 gulp.task('html-compress', function() {
@@ -48,4 +58,4 @@ gulp.task('clean', function(){
 // Default Task
 // ///////////////////////////////////////////////
 
-gulp.task('default', ['html-compress', 'css-minify', 'img-min']);
+gulp.task('default', ['html-compress', 'css-minify', 'img-min', 'copy-js', 'resize-pizzeria']);
