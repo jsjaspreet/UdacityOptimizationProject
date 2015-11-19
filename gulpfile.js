@@ -9,7 +9,8 @@ var gulp = require('gulp'),
     imagemin = require('imagemin'),
     imageminJPG = require('imagemin-jpegtran'),
     pngquant = require('imagemin-pngquant'),
-    imageResize = require('gulp-image-resize');
+    imageResize = require('gulp-image-resize'),
+    runSequence = require('run-sequence');
 
 
 // ///////////////////////////////////////////////
@@ -53,9 +54,16 @@ gulp.task('clean', function(){
     .pipe(clean());
 });
 
+gulp.task('build', function(callback) {
+    runSequence(
+        ['html-compress', 'css-minify', 'img-min', 'copy-js'],
+        'resize-pizzeria',
+        callback);
+});
 
 // ///////////////////////////////////////////////
 // Default Task
 // ///////////////////////////////////////////////
 
-gulp.task('default', ['html-compress', 'css-minify', 'img-min', 'copy-js', 'resize-pizzeria']);
+//gulp.task('default', );
+gulp.task('default', ['build']);
