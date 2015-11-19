@@ -10,8 +10,6 @@
 
 ####Optimizations for pizza.html
 
-I made a few optimizations in pizza html to achieve the 60fps goal.
-
 - Added will-change: transform property to the appropriate class holder of pizza's, this allows the browser to cache the transformation
 - Moved the FSL problem of referencing document.body.scrollTop outside of the for loop on line main.js:513, this stops layout from being run unnecessarily.
 - Remove unnecessary for loop recomputation of dom element list lengths by assigning lengths to static variables
