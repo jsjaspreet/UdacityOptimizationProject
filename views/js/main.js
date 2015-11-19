@@ -424,7 +424,8 @@ var resizePizzas = function(size) {
    // Returns the size difference to change a pizza element from one size to another. Called by changePizzaSlices(size).
   function determineDx (elem, size) {
     var oldWidth = elem.offsetWidth;
-    var windowWidth = document.querySelector("#randomPizzas").offsetWidth;
+    // OPTIMIZATION: Changed document.query to getElementById which has better performance than a general DOM search
+    var windowWidth = document.getElementById("randomPizzas").offsetWidth;
     var oldSize = oldWidth / windowWidth;
 
     // TODO: change to 3 sizes? no more xl?
@@ -450,14 +451,17 @@ var resizePizzas = function(size) {
 
   // Iterates through pizza elements on the page and changes their widths
   function changePizzaSizes(size) {
-    // The problem with the long time in updating Pizza sizes
-    // was in the use of offsetWidth which was re-triggering layout.
-    // Since the pizzas are in uniform containers, we can recalculate width for a single container.
-    // And then batch our style updates in bulk.
-    var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[0], size);
-    var newwidth = (document.querySelectorAll(".randomPizzaContainer")[0].offsetWidth + dx) + 'px';
-    for (var i = 0; i < document.querySelectorAll(".randomPizzaContainer").length; i++) {
-      document.querySelectorAll(".randomPizzaContainer")[i].style.width = newwidth;
+    // OPTIMIZATION: Use getElementsByClassName instead of querySelector, save entire list
+    var pizzaContainers = document.getElementsByClassName("randomPizzaContainer");
+    // OPTIMIZATION: All pizzas should be the same so just use the first pizza
+    var dx = determineDx(pizzaContainers[0], size);
+    // OPTIMIZATION: Bring offsetWidth outside of the for loop to stop layout triggering
+    var newwidth = (pizzaContainers[0].offsetWidth + dx) + 'px';
+    // OPTIMIZATION: Use length attribute of previously saved variable to avoid expensive document calls
+    var len = pizzaContainers.length;
+
+    for (var i = 0; i < len; i++) {
+      pizzaContainers[i].style.width = newwidth;
     }
   }
 
@@ -472,9 +476,10 @@ var resizePizzas = function(size) {
 
 window.performance.mark("mark_start_generating"); // collect timing data
 
+// OPTIMIZATION: Bring pizzas div outside for loop as static variable
+var pizzasDiv = document.getElementById("randomPizzas");
 // This for-loop actually creates and appends all of the pizzas when the page loads
 for (var i = 2; i < 100; i++) {
-  var pizzasDiv = document.getElementById("randomPizzas");
   pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
 
@@ -506,13 +511,16 @@ function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
 
-  var items = document.querySelectorAll('.mover');
+  var items = document.getElementsByClassName('mover');
   // scrollTop is triggering FSL, this is a constant value so don't recalculate it
   // Instead just assign static value to a static variable and incorporate it within loop
   var sinOffset = (document.body.scrollTop / 1250);
-  for (var i = 0; i < items.length; i++) {
-    var phase = Math.sin( sinOffset + (i % 5));
-    var x = items[i];
+
+  // OPTIMIZATION: Save length in a static variable to avoid recalculating
+  var phase, x, len = items.length;
+  for (var i = 0; i < len; i++) {
+    phase = Math.sin( sinOffset + (i % 5));
+    x = items[i];
     x.style.left = x.basicLeft + 100 * phase + 'px';
   }
 
@@ -533,15 +541,20 @@ window.addEventListener('scroll', updatePositions);
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  for (var i = 0; i < 200; i++) {
-    var elem = document.createElement('img');
+  // Declare elem variable outside of loop to prevent it from being recreated in every loop iteration
+  var elem;
+  var movingPizzas1 = document.getElementById("movingPizzas1");
+  // Dynamically ascertain number of pizzas to render based on screen size
+  var numPizzasToRender = Math.ceil((window.screen.height/300)*cols);
+  for (var i = 0; i < numPizzasToRender; i++) {
+    elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
     elem.style.height = "100px";
     elem.style.width = "73.333px";
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
-    document.querySelector("#movingPizzas1").appendChild(elem);
+    movingPizzas1.appendChild(elem);
   }
   updatePositions();
 });
