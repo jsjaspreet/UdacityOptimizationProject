@@ -29,13 +29,13 @@
 - Ensure imagemagick is installed 
 
 ```bash
-bower install imagemagick'
+$> bower install imagemagick
 ```
 
 - Build with gulp 
 
 ```bash
-gulp
+$> gulp
 ```
 
 - To run the server:
