@@ -29,7 +29,7 @@
 - Ensure imagemagick is installed 
 
 ```bash
-$> bower install imagemagick
+$> brew install imagemagick
 ```
 
 - Build with gulp 
