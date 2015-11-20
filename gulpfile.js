@@ -24,14 +24,6 @@ gulp.task('img-min', function(){
     .run();
 });
 
-gulp.task('resize-pizzeria', function(){
-    gulp.src('dist/img/pizzeria.jpg')
-        .pipe(imageResize({
-            width : 100
-        }))
-        .pipe(gulp.dest('dist/img/'));
-});
-
 gulp.task('copy-js', function(){
    gulp.src("js/*")
        .pipe(gulp.dest('dist/js'));
@@ -57,7 +49,6 @@ gulp.task('clean', function(){
 gulp.task('build', function(callback) {
     runSequence(
         ['html-compress', 'css-minify', 'img-min', 'copy-js'],
-        'resize-pizzeria',
         callback);
 });
 
